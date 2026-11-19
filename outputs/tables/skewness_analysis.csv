@@ -1,0 +1,4 @@
+Feature,Raw_Skewness,Post_Log1p_Skewness,Skewness_Reduction,Normality_Assessment
+Annual_Income,4.5892069576562555,-0.38966472996498136,4.199542227691274,Strongly Right-Skewed
+Loan_Amount,2.591248263918922,0.09593866868983589,2.4953095952290862,Strongly Right-Skewed
+Savings_Balance,6.567277050488421,-2.0521908333084777,4.5150862171799435,Strongly Right-Skewed

@@ -1,0 +1,5 @@
+Feature_1,Feature_2,Pearson_r,Absolute_r,Nature_of_Relationship
+Loan_Amount,Property_Value,0.941532619317791,0.941532619317791,Collateral sizing
+Late_Payments_2Y,Ever_Delinquent,0.8596895021304257,0.8596895021304257,Structural delinquency indicator
+Interest_Rate_Pct,Credit_Score,-0.8128404636566883,0.8128404636566883,Risk-based interest rate pricing
+Loan_Term_Months,Is_Home_Loan,0.7018074552737743,0.7018074552737743,Mortgage term sizing

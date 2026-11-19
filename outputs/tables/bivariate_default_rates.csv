@@ -1,0 +1,8 @@
+Category,Total_Applicants,Defaults,Default_Rate,Variable
+Unemployed,628,299,47.611464968152866,Employment_Type
+Contract,1433,330,23.02861130495464,Employment_Type
+Self-Employed,2019,433,21.44626052501238,Employment_Type
+Salaried,5603,883,15.759414599321792,Employment_Type
+Retired,317,33,10.410094637223976,Employment_Type
+No,9298,1616,17.380081738008172,Previous_Default
+Yes,702,362,51.566951566951566,Previous_Default
