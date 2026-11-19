@@ -1,0 +1,4 @@
+Feature,Raw_Unique_Values,Target_Canonical_Values,Non_Standard_Rows,Standardisation_Rule
+Gender,8,2,680,"strip whitespace -> lowercase -> map: 'm', 'male' -> 'Male'; 'f', 'female' -> 'Female'"
+Employment_Type,8,5,319,"strip whitespace -> map 'Self employed', 'self-employed' -> 'Self-Employed'; 'salaried' -> 'Salaried'"
+Employer_Sector,11,9,240,strip whitespace -> map 'IT / Finance' -> 'IT/Finance'; 'public sector' -> 'Public Sector'

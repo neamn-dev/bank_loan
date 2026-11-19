@@ -1,0 +1,22 @@
+Problem_ID,Issue,Affected_Columns,Count,Why_It_Matters,Action
+1,Exact duplicate rows,All (Applicant_ID repeats),100,Leakage between train & test; artificial metric inflation,"Drop before split (leaves 10,000 rows)"
+2,Hidden missing string N/A,Savings_Balance,614,Coerces numeric column to object; models crash,"Convert text to NaN, then median impute"
+3,Blank numeric cells,Annual_Income,466,Sklearn algorithms reject NaNs,Median imputation in Pipeline + missing flag
+4,Blank cells in other columns,"Marital_Status, Education, Residence, Credit_Score...",285,Unusable in models without imputation,Median/most_frequent imputation in Pipeline
+5,Structural blank (not missing),Months_Since_Last_Delinquency,7247,Equals applicants with 0 late payments; carries positive meaning,Create Ever_Delinquent flag; fill with 0
+6,Structural blank (not missing),Property_Value,8308,Only Home loans possess property value,Is_Home_Loan flag; fill 0; build LTV only for Home
+7,Inconsistent labels,Gender,680,Creates 8 dummy columns instead of 1,Standardize to Male/Female
+8,Inconsistent labels,Employment_Type,319,Splits identical category across multiple dummies,Standardize spelling and hyphens
+9,Inconsistent labels,Employer_Sector,240,Typing variants dilute statistical power,Strip spaces and map to standard 9 sectors
+10,Impossible Age values,"Age (<18 or >90: values 3, 118, 212)",3,"Distorts scaling, distance metrics, and covariances","Set to NaN, impute median"
+11,Sentinel code 9999,Credit_Score,6,Explodes mean/std; ruins KNN/SVM distances,"Set to NaN, impute median"
+12,Negative Years_Employed,Years_Employed (value -1.0),4,Impossible economic value,"Set to NaN, impute median"
+13,Unit inconsistency,Interest_Rate_Pct (values < 1.0),8,Decimals mixed with percentages (0.07 vs 7.0%),Multiply values < 1.0 by 100
+14,Right-skewed monetary variables,"Annual_Income, Loan_Amount, Savings_Balance",10100,Violates Gaussian assumptions in LDA/QDA/NB,Evaluate log1p transformation
+15,High income outliers,Annual_Income (IQR rule flags 354),354,Pulls linear and distance-based decision boundaries,Cap (winsorize) or log transform; do not delete
+16,Negative Checking_Balance,Checking_Balance,135,Overdrafts indicate liquidity stress (37% default rate),Keep as valid economic signal
+17,High-cardinality categorical,Branch_Code (40 levels),40,Dimensionality explosion if one-hot encoded,Frequency encoding or out-of-fold target encoding
+18,Class imbalance,Loan_Default (19.82% Yes),2002,Majority baseline bias; always-No achieves 80.18%,"Stratified split, class weights, PR-AUC, cost thresholds"
+19,Target Leakage,Risk_Category,10100,Internal risk grade reveals default outcome,Exclude Risk_Category from Loan_Default features
+20,Mixed feature scales,Annual_Income vs Age vs Credit_Score,10100,Dominates distance/regularized algorithms,StandardScaler fitted strictly on train split
+21,Multicollinear features,Loan_Amount vs Property_Value; Late_Payments vs Delinquency,10100,Unstable regression coefficients; breaks NB independence,"VIF check, L1/L2 regularization, feature pruning"
