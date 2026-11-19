@@ -1,0 +1,8 @@
+Model_Configuration,Bias_Level,Variance_Level,Fitting_Diagnosis,Rationale
+Depth-2 Decision Tree,High Bias,Low Variance,Severe Underfitting,Only 4 leaves; misses non-linear interactions
+Depth-15 Decision Tree,Low Bias,Very High Variance,Severe Overfitting,Splits on noise; high leaf purity on tiny samples
+KNN (k=1),Very Low Bias,Extreme Variance,Severe Overfitting,Memorizes training labels; Voronoi boundaries around outliers
+KNN (k=75),High Bias,Low Variance,Underfitting,Oversmooths local neighborhoods into global average
+Linear SVM (C=1.0),Moderate Bias,Low Variance,Well-Regularized Balance,Maximizes margin width; stable linear hyperplane
+RBF SVM (very large gamma),Low Bias,Extreme Variance,Severe Overfitting,Gaussian bells are so narrow that each point becomes an isolated island
+Random Forest (100 trees),Low Bias,Low-to-Moderate Variance,Optimal Production Fit,Bagging + feature subsampling reduces variance by decorrelating trees
