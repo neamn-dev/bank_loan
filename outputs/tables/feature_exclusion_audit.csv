@@ -1,0 +1,5 @@
+Column,Role,Why_Excluded,Remedy
+Applicant_ID,Primary Key Identifier,Memorization without generalizable signal,Drop from feature matrix
+Application_Date,Timestamp Metadata,Non-repeating time points cause temporal overfitting,"Decompose into Month, Quarter, Year"
+Risk_Category,Alternative Target Variable,Target Leakage (69% of High Risk default),Strict separation; isolate as Task 2 target
+Branch_Code,High Cardinality Categorical (40 levels),Overfitting and sample sparsity with 40 dummies,Group into Risk Tiers or Frequency Encode

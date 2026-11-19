@@ -1,0 +1,3 @@
+Split_Strategy,Train_Rows,Test_Rows,Train_Defaults,Test_Defaults,Train_Default_Rate,Test_Default_Rate,Absolute_Rate_Gap
+Stratified 80/20,8000,2000,1582,396,19.78%,19.80%,0.0250%
+Stratified 70/30,7000,3000,1385,593,19.79%,19.77%,0.0190%
