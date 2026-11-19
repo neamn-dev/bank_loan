@@ -1,0 +1,42 @@
+,Column,Decision,Reason_Category,Details,Leakage_Risk
+1,Applicant_ID,Exclude,Identifier,Unique row ID with no predictive value. Including it would let the model memorise individual applicants.,None
+2,Application_Date,Exclude (raw),Date variable,"Raw dates are not meaningful features. Engineer month, year, or quarter instead.",Low
+3,Risk_Category,Exclude,Target leakage,Internal risk grade almost perfectly reveals Loan_Default. Including it would inflate performance unrealistically.,Critical
+4,Loan_Default,N/A,Is the target,This is the target variable for binary classification.,N/A
+5,Branch_Code,Keep (encode carefully),High cardinality,40 levels. One-hot encoding creates 39 columns. Consider frequency or target encoding inside CV.,Low
+6,Application_Channel,Keep,Legitimate feature,Available at application time. Standard categorical feature.,None
+7,Age,Keep (clean first),Legitimate feature,"Contains impossible values (3, 118, 212). Clean before use.",None
+8,Gender,Keep (investigate fairness),Protected attribute,Available at application time. Use but check fairness implications.,Low (proxy)
+9,Marital_Status,Keep (impute missing),Legitimate feature,104 missing values. Available at application time.,None
+10,Education_Level,Keep (impute missing),Ordinal feature,385 missing. Encode ordinally.,None
+11,Dependents,Keep,Legitimate feature,No issues.,None
+12,Region,Keep (investigate fairness),Protected attribute,Available at application time. Use but check fairness implications.,Low (proxy)
+13,Residence_Years,Keep (impute),Legitimate feature,384 missing.,None
+14,Home_Ownership,Keep,Legitimate feature,No issues.,None
+15,Employment_Type,Keep (clean labels),Legitimate feature,Inconsistent labels. Standardise before use.,None
+16,Employer_Sector,Keep (clean labels),Legitimate feature,Typing variants. Standardise before use.,None
+17,Years_Employed,Keep (clean + impute),Legitimate feature,530 missing. Contains negative values (impossible). Clean first.,None
+18,Annual_Income,Keep (impute),Legitimate feature,466 missing. Right-skewed. Consider log transform.,None
+19,Salary_Account_With_Bank,Keep,Legitimate feature,No issues.,None
+20,Vehicle_Owned,Keep,Legitimate feature,No issues.,None
+21,Loan_Purpose,Keep,Legitimate feature,No issues.,None
+22,Loan_Amount,Keep,Legitimate feature,No issues. Right-skewed.,None
+23,Loan_Term_Months,Keep,Legitimate feature,Discrete: 12/24/36/48/60/84.,None
+24,Interest_Rate_Pct,Keep (fix units),Legitimate feature,8 values are fractions (<1) instead of percentages. Multiply by 100.,None
+25,Property_Value,Keep (handle structural blank),Legitimate but structurally blank,Blank for non-Home loans (82% missing). Create Is_Home_Loan flag; compute LTV for Home loans only.,None
+26,Has_Co_Applicant,Keep,Legitimate feature,No issues.,None
+27,Credit_Score,Keep (clean sentinel),Legitimate feature,285 missing + 6 sentinel values of 9999. Replace 9999 with NaN.,None
+28,Credit_History_Years,Keep (impute),Legitimate feature,315 missing.,None
+29,Existing_Loans,Keep,Legitimate feature,No issues.,None
+30,Total_Credit_Limit,Keep (impute),Legitimate feature,312 missing.,None
+31,Credit_Utilization_Pct,Keep,Legitimate feature,No issues.,None
+32,Credit_Inquiries_6M,Keep (impute),Legitimate feature,201 missing.,None
+33,Late_Payments_2Y,Keep,Legitimate feature,No issues.,None
+34,Months_Since_Last_Delinquency,Keep (handle structural blank),Legitimate but structurally blank,Blank when no late payments (72% missing). Create Ever_Delinquent flag; fill with 0.,None
+35,Previous_Default,Keep,Legitimate feature,Whether applicant defaulted before. Available at decision time.,Low
+36,Monthly_Debt_Payment,Keep,Legitimate feature,No issues.,None
+37,Savings_Balance,Keep (convert N/A),Legitimate feature,Text N/A entries. Convert to NaN then impute.,None
+38,Checking_Balance,Keep (impute),Legitimate feature,Can be negative (overdrawn). Valid. 273 missing.,None
+39,Overdrafts_12M,Keep,Legitimate feature,No issues.,None
+40,Bank_Relationship_Years,Keep,Legitimate feature,No issues.,None
+41,Mobile_Banking_User,Keep,Legitimate feature,No issues.,None

@@ -1,0 +1,42 @@
+#,Column,Variable_Type,Role,Description
+1,Applicant_ID,Identifier,Identifier,Unique application reference (not sequential)
+2,Application_Date,Date,Feature (engineer),Date of application (2022-2024)
+3,Branch_Code,Categorical (nominal),Feature,Originating branch (40 levels)
+4,Application_Channel,Categorical (nominal),Feature,Branch / Online / Agent
+5,Age,Numeric (continuous),Feature,Applicant age in years (contains data-entry errors)
+6,Gender,Categorical (nominal),Feature / Protected,Male / Female (recorded inconsistently)
+7,Marital_Status,Categorical (nominal),Feature,Single / Married / Divorced / Widowed
+8,Education_Level,Ordinal,Feature,High School < Diploma < Bachelor < Master < PhD
+9,Dependents,Numeric (integer/count),Feature,Number of financial dependents (0-5)
+10,Region,Categorical (nominal),Feature / Protected,Urban / Suburban / Rural
+11,Residence_Years,Numeric (continuous),Feature,Years at current address
+12,Home_Ownership,Categorical (nominal),Feature,Rent / Mortgage / Own
+13,Employment_Type,Categorical (nominal),Feature,Salaried / Self-Employed / Contract / Unemployed / Retired
+14,Employer_Sector,Categorical (nominal),Feature,Sector of employer (typing variants exist)
+15,Years_Employed,Numeric (continuous),Feature,Years in current employment
+16,Annual_Income,Numeric (continuous),Feature,Gross annual income
+17,Salary_Account_With_Bank,Binary,Feature,Whether salary is paid into this bank
+18,Vehicle_Owned,Binary,Feature,Whether applicant owns a vehicle
+19,Loan_Purpose,Categorical (nominal),Feature,Home / Auto / Education / Business / Medical / Personal
+20,Loan_Amount,Numeric (continuous),Feature,Requested loan amount
+21,Loan_Term_Months,Numeric (integer/count),Feature,"Loan term: 12, 24, 36, 48, 60, or 84 months"
+22,Interest_Rate_Pct,Numeric (continuous),Feature,Annual interest rate offered (unit inconsistencies)
+23,Property_Value,Numeric (continuous),Feature (structural blank),Only filled for Home loans (structural blank)
+24,Has_Co_Applicant,Binary,Feature,Whether application is joint
+25,Credit_Score,Numeric (continuous),Feature,Bureau credit score 300-850 (sentinel 9999 exists)
+26,Credit_History_Years,Numeric (continuous),Feature,Length of credit history in years
+27,Existing_Loans,Numeric (integer/count),Feature,Number of open loans (0-6)
+28,Total_Credit_Limit,Numeric (continuous),Feature,Sum of approved credit limits
+29,Credit_Utilization_Pct,Numeric (continuous),Feature,Share of revolving credit used (%)
+30,Credit_Inquiries_6M,Numeric (integer/count),Feature,Hard credit enquiries in last 6 months
+31,Late_Payments_2Y,Numeric (integer/count),Feature,Late payments in last 24 months
+32,Months_Since_Last_Delinquency,Numeric (continuous),Feature (structural blank),Blank when no late payments (structural blank)
+33,Previous_Default,Binary,Feature,Whether applicant defaulted on a previous loan
+34,Monthly_Debt_Payment,Numeric (continuous),Feature,Existing monthly debt service payment
+35,Savings_Balance,Numeric (continuous),Feature,Savings balance (some entries are text N/A)
+36,Checking_Balance,Numeric (continuous),Feature,Current account balance (can be negative = overdrawn)
+37,Overdrafts_12M,Numeric (integer/count),Feature,Overdraft events in last 12 months
+38,Bank_Relationship_Years,Numeric (continuous),Feature,Years as a customer of this bank
+39,Mobile_Banking_User,Binary,Feature,Whether applicant uses mobile banking app
+40,Loan_Default,Target (binary),Target,"Did the borrower default? (Yes/No, positive=Yes)"
+41,Risk_Category,Target (multiclass ordinal),Target,Internal risk grade (Low/Medium/High)
