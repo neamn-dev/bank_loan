@@ -1,0 +1,3 @@
+Operating_Threshold,False_Negatives (FN),False_Positives (FP),Total_Cost_Units,Cost_Premium_Paid
+Standard Cutoff (theta = 0.50),190,80,1980.0,"+1,104 units (+126.0%)"
+Optimal Cost Cutoff (theta = 0.09),32,556,876.0,Minimum Expected Cost (Optimal Baseline)
