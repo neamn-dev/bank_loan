@@ -1,0 +1,92 @@
+Q1 [pts=3]: Name every target variable in Loan_Data. For each one state: binary or multiclass, nominal or ordinal, its classes, and which class you would call the 'positive' class for Loan_Default and why.
+Q2 [pts=2]: How many rows (applicants) and columns (variables) does Loan_Data contain before any cleaning? How many are features, identifiers and targets?
+Q3 [pts=3]: Compute the class distribution of Loan_Default. What accuracy does a model that always predicts 'No' get? Why is accuracy alone a poor yardstick here?
+Q4 [pts=2]: Count the applicants in each Risk_Category class. Is the multiclass target balanced?
+Q5 [pts=2]: Which columns must NOT be fed to a model as raw features for Loan_Default? For each, say what you could do instead.
+Q6 [pts=4]: Build a cross-tab of Loan_Default x Risk_Category with COUNTIFS. Explain why Risk_Category must be excluded when predicting Loan_Default. What is this problem called?
+Q7 [pts=3]: Which of the algorithms in this course handle a multiclass target natively and which need a strategy such as one-vs-rest or one-vs-one?
+Q8 [pts=3]: Count the missing values in Annual_Income and Savings_Balance. Missing values are written in different ways - list every form you find. Which other columns contain blanks?
+Q9 [pts=4]: Months_Since_Last_Delinquency and Property_Value contain thousands of blanks. Are these truly 'missing'? Compare the blank count of Months_Since_Last_Delinquency with the number of applicants with zero late payments, and the blank count of Property_Value with the number of non-Home loans. Decide how to encode each.
+Q10 [pts=3]: Gender is recorded inconsistently. List every variant, count the rows that do not match the two standard labels, and write the cleaning rule.
+Q11 [pts=3]: Employment_Type has inconsistent labels (e.g. 'Self employed', 'self-employed', 'salaried'). Count the non-standard rows and write the standardising rule.
+Q12 [pts=3]: Employer_Sector has typing variants such as 'IT / Finance' and 'public sector'. Count them and write the cleaning rule.
+Q13 [pts=4]: Find impossible values in Age, Credit_Score and Years_Employed (use MIN, MAX, COUNTIF). Decide how each should be treated and why deleting the rows is usually the wrong choice.
+Q14 [pts=3]: Interest_Rate_Pct has a unit inconsistency. Detect it and fix it.
+Q15 [pts=2]: How many exact duplicate rows exist? (Hint: Applicant_ID should be unique.) Remove them and explain why duplicates damage model evaluation.
+Q16 [pts=4]: Apply the IQR rule (Q3 + 1.5 x IQR) to Annual_Income. How many outliers are flagged? Decide whether to remove, cap (winsorise) or log-transform, and say which algorithms are most sensitive.
+Q17 [pts=3]: Compute SKEW() for Annual_Income, Loan_Amount and Savings_Balance. Which are strongly right-skewed? Apply LN(1+x) and re-compute. Which algorithms benefit from the transform?
+Q18 [pts=3]: Checking_Balance contains negative values. Are they errors? Count them and decide what to do. What is the lesson for outlier handling?
+Q19 [pts=4]: Compare the mean and median of Annual_Income. Which would you use to impute the missing incomes? Is the missingness random? (Compare the default rate of rows with and without an income.)
+Q20 [pts=5]: Branch_Code has 40 levels. Compare the default rate of BR-31 with BR-01. How would you encode such a high-cardinality variable without exploding the number of columns or leaking the target?
+Q21 [pts=4]: Classify every categorical feature as nominal or ordinal and choose an encoding. After one-hot encoding with drop-first, how many model columns result in the reference pipeline? What is the dummy-variable trap?
+Q22 [pts=4]: Write a reusable cleaning function (labels, sentinel codes, units, impossible values, duplicates). Report the shape and number of remaining missing values after cleaning.
+Q23 [pts=3]: Why must imputers, scalers and encoders be fitted on the training split only? Describe a scikit-learn Pipeline/ColumnTransformer that avoids leakage.
+Q24 [pts=3]: Compute the default rate by Employment_Type (pivot table or COUNTIFS). Which group is riskiest and which safest?
+Q25 [pts=3]: Calculate the average Credit_Score of defaulters vs non-defaulters. Show why you must treat the 9999 sentinel values first.
+Q26 [pts=5]: Engineer Debt_to_Income = (Monthly_Debt_Payment + new-loan instalment) / (Annual_Income/12), where instalment = PMT(rate/12, term, -amount). Add the column for the first 5 rows and explain why this ratio may beat the raw columns.
+Q27 [pts=3]: Create at least four more features (Loan_to_Income, age band, utilisation band, application month, savings-to-income, Ever_Delinquent...). Which ones improve cross-validated AUC?
+Q28 [pts=3]: Build the correlation matrix of the numeric features. Which pairs exceed |0.7| and what should you do about them?
+Q29 [pts=3]: Draw boxplots of Credit_Score, Credit_Utilization_Pct and Late_Payments_2Y by Loan_Default. Which look most discriminative?
+Q30 [pts=2]: What is the default rate of applicants with Previous_Default = Yes compared with No?
+Q31 [pts=4]: Create a stratified 80/20 train-test split (random_state=42) of the cleaned data. Confirm the default rate is the same in both parts. When would a time-based split on Application_Date be better?
+Q32 [pts=4]: Which of the algorithms need feature scaling and why? Demonstrate with KNN with and without StandardScaler.
+Q33 [pts=4]: Compare plain logistic regression with class_weight='balanced'. What happens to recall, precision and accuracy? Which would you give the bank?
+Q34 [pts=3]: Name three ways to handle class imbalance and one risk of each.
+Q35 [pts=5]: Fit a logistic regression for Loan_Default on the training set. Report test accuracy, precision, recall, F1 and AUC (positive class = Yes).
+Q36 [pts=3]: A model gives log-odds z = -1.35 for an applicant. Calculate the odds and the probability of default.
+Q37 [pts=3]: The coefficient of Late_Payments_2Y is 0.35. Interpret it as an odds ratio.
+Q38 [pts=5]: Fit logistic regression with L1 and L2 penalties for C = 0.01, 0.1, 1, 10. Describe what happens to the coefficients (how many are exactly zero?) and to the test AUC.
+Q39 [pts=5]: Find a probability threshold that gives recall of at least 75%. Report the precision and accuracy you pay for it.
+Q40 [pts=4]: State the assumptions of logistic regression and how you would check each on this data.
+Q41 [pts=4]: Fit a multinomial logistic regression for Risk_Category (exclude Loan_Default as a feature!). Report accuracy and the 3x3 confusion matrix. Which classes are confused?
+Q42 [pts=4]: List the five largest standardised coefficients and interpret the top two as odds ratios per 1 SD.
+Q43 [pts=3]: State Bayes' theorem for classification and the 'naive' assumption. Name three pairs of features in Loan_Data that clearly violate it.
+Q44 [pts=5]: By COUNTIFS compute the prior P(Default = Yes) and the likelihoods P(Employment = Unemployed | Yes) and P(Employment = Unemployed | No).
+Q45 [pts=3]: A category never appears among 200 defaulters (6 possible categories). Compute the Laplace-smoothed likelihood (alpha = 1) and explain why smoothing is needed.
+Q46 [pts=4]: Given P(Yes)=0.20, P(Unemployed|Yes)=0.12, P(PrevDefault=Yes|Yes)=0.25, P(Unemployed|No)=0.05, P(PrevDefault=Yes|No)=0.04, compute the posterior probability of default for an unemployed applicant with a previous default.
+Q47 [pts=4]: Fit Gaussian NB (numeric), Categorical NB (binned/categorical) and compare with logistic regression using AUC and recall.
+Q48 [pts=4]: NB often ranks well but gives extreme probabilities. Compare Brier scores and plot a calibration curve for NB and logistic regression.
+Q49 [pts=4]: Applicant A: Age 30, Income 40,000, Score 650. Applicant B: Age 40, Income 42,000, Score 700. Compute the Euclidean distance (i) raw, (ii) after dividing each difference by the standard deviations 10, 15,000 and 70.
+Q50 [pts=5]: Plot train, test and 5-fold CV accuracy against k (1-75). Choose k and justify it.
+Q51 [pts=4]: Report train and test accuracy for k=1 and k=51. Which has the higher variance and which the higher bias?
+Q52 [pts=4]: Add 20 random-noise columns and re-fit KNN and logistic regression. Explain the curse of dimensionality.
+Q53 [pts=4]: Compare uniform vs distance weighting and Euclidean vs Manhattan distance. How do you treat categorical variables in KNN?
+Q54 [pts=3]: Why is KNN called a 'lazy learner'? What are its training and prediction costs?
+Q55 [pts=4]: Define margin, support vector, hard margin and soft margin. What does C control?
+Q56 [pts=3]: Why is scaling mandatory for SVM?
+Q57 [pts=4]: Fit a linear SVM for C = 0.001, 0.01, 0.1, 1, 10, 100. Record test accuracy/AUC and (with SVC) the number of support vectors.
+Q58 [pts=3]: For a point with y=+1 and decision value f=0.4 compute the hinge loss and the logistic loss.
+Q59 [pts=4]: SVC does not output probabilities by default. How do you obtain a ROC curve and calibrated probabilities?
+Q60 [pts=4]: Explain the kernel trick. Write the RBF kernel and say what gamma and C each control.
+Q61 [pts=3]: Compute K(x,z) for x=(1,2), z=(2,4) with gamma = 0.5. What value do you get for identical points?
+Q62 [pts=5]: Fit an RBF SVC over a grid of C (0.01-100) and gamma (0.0005-0.1). Show the CV AUC as a heat-map and mark the under-fitting and over-fitting corners.
+Q63 [pts=4]: Compare linear SVM, RBF SVM and polynomial SVM on Loan_Default. Is the non-linear model worth it?
+Q64 [pts=3]: How does the training time and number of support vectors of a kernel SVM change with n? When would you prefer it to logistic regression?
+Q65 [pts=4]: Fit an unrestricted decision tree. Report train vs test accuracy, depth and number of leaves. What does the gap show?
+Q66 [pts=5]: Plot train, test and CV accuracy against max_depth (1-15). Mark the under-fitting and over-fitting regions and the best depth.
+Q67 [pts=3]: A node has 100 applicants, 30 defaulters. Compute Gini impurity and entropy.
+Q68 [pts=5]: Parent node: 100 (30 Yes). A split gives Left 40 (25 Yes) and Right 60 (5 Yes). Compute the Gini gain.
+Q69 [pts=5]: Tune max_depth, min_samples_leaf and ccp_alpha with grid search (5-fold CV, AUC). Explain pre-pruning vs post-pruning.
+Q70 [pts=3]: List the five most important features of your tree. Do they agree with the logistic-regression coefficients?
+Q71 [pts=5]: Define bias, variance and irreducible error. Place on a bias-variance map: depth-2 tree, depth-15 tree, KNN k=1, KNN k=75, linear SVM, RBF SVM with very large gamma.
+Q72 [pts=4]: Train 20 trees on bootstrap samples and measure how often their predictions disagree on the same 50 test applicants. How do bagging and random forests exploit this?
+Q73 [pts=4]: State the assumptions of LDA and QDA. Which assumption separates them, and how is LDA related to logistic regression?
+Q74 [pts=4]: Fit LDA and QDA for Loan_Default. Why does plain QDA fail or perform poorly with the one-hot columns, and what is reg_param?
+Q75 [pts=4]: Use LDA to project the numeric features onto LD1 and LD2 for Risk_Category. How many discriminant axes exist and how much variance does each explain? Plot the classes.
+Q76 [pts=4]: Compare the class covariance matrices of the numeric features (or Box's M). Does the equal-covariance assumption hold? Which of LDA/QDA is preferable here?
+Q77 [pts=3]: How do class priors change the LDA decision boundary? Give an example with a 20%/80% prior.
+Q78 [pts=5]: A model gives TP=62, FP=28, FN=71, TN=439 (positive = default). Compute accuracy, precision, recall, specificity, F1 and the Matthews correlation coefficient.
+Q79 [pts=3]: What are the accuracy and recall of a model that always predicts 'No default'? Why does a good model still beat it?
+Q80 [pts=5]: Run stratified 5-fold cross-validation (AUC) for logistic, NB, KNN, linear SVM, RBF SVM, tree, LDA and QDA. Report mean and standard deviation and explain why CV beats a single split.
+Q81 [pts=4]: Plot ROC curves for all models on one chart. Interpret AUC, and explain why two models with the same AUC can need different thresholds.
+Q82 [pts=4]: Draw the precision-recall curve for logistic regression and the always-'No' baseline. Why is PR often more informative than ROC for imbalanced data?
+Q83 [pts=5]: Suppose a missed defaulter (FN) costs 10 units and a false alarm (FP) costs 1 unit. Choose the threshold that minimises expected cost on the validation data and compare it with 0.5.
+Q84 [pts=5]: For the Risk_Category model report the 3x3 confusion matrix, per-class precision/recall, macro-F1, weighted-F1 and accuracy. Explain macro vs micro vs weighted averaging.
+Q85 [pts=4]: Compute the Brier score and plot a reliability diagram for logistic regression, NB and the unrestricted tree.
+Q86 [pts=4]: Draw a learning curve for logistic regression and for a deep tree. Diagnose under- and over-fitting.
+Q87 [pts=5]: Choose the best of all models and justify it with at least three metrics. Is the difference between the top two models statistically meaningful (paired t-test on CV folds or McNemar)?
+Q88 [pts=6]: Tune the hyper-parameters of every algorithm (grid or random search on the TRAINING data, scoring AUC). Which algorithm gains most from tuning? Why must tuning be nested inside cross-validation for an honest estimate?
+Q89 [pts=3]: Which single metric would you report to a bank manager and why?
+Q90 [pts=10]: Build a complete pipeline for Loan_Default (cleaning, features, three models, tuning, threshold selection) and write a one-page recommendation to the bank.
+Q91 [pts=6]: Compare default rates and model errors by Gender and Region. Is the model fair? Discuss.
+Q92 [pts=8]: Write a comparison table for all seven algorithm families (logistic, NB, KNN, SVM, kernel SVM, tree, discriminant analysis) on Loan_Default: assumptions, scaling need, bias/variance position, hyper-parameter, test AUC, recall and your recommendation.

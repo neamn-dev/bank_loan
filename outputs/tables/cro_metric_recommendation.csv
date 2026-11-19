@@ -1,0 +1,5 @@
+Metric,Mathematical_Formula,Severe_Defect_in_Banking,CRO_Verdict
+Raw Accuracy,(TP + TN) / Total,Blind to class imbalance; 80% accuracy achievable with 0% default detection.,REJECT
+ROC-AUC,Integral of TPR vs. FPR across all theta,Integrates over unrealistic operating thresholds (e.g. theta > 0.80).,SECONDARY (Algorithm Selection Only)
+Precision (PPV),TP / (TP + FP),"Can be gamed by approving almost nobody, creating extreme opportunity loss.",SECONDARY
+Cost-Weighted Loss / Recall at theta* = 0.18,C_FN * FN + C_FP * FP (at 10:1 cost ratio),None. Directly aligns statistical predictions with dollar P&L outcomes.,PRIMARY EXECUTIVE RECOMMENDATION
