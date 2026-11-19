@@ -1,0 +1,17 @@
+Variable,Type,Levels,Encoding_Strategy,Reference_Dropped,Model_Columns
+Education_Level,Ordinal,5,OrdinalEncoder (0 to 4),N/A,1
+Gender,Binary,2,Binary Mapping (0/1),Female,1
+Salary_Account_With_Bank,Binary,2,Binary Mapping (0/1),No,1
+Vehicle_Owned,Binary,2,Binary Mapping (0/1),No,1
+Has_Co_Applicant,Binary,2,Binary Mapping (0/1),No,1
+Previous_Default,Binary,2,Binary Mapping (0/1),No,1
+Mobile_Banking_User,Binary,2,Binary Mapping (0/1),No,1
+Ever_Delinquent,Binary,2,Binary Indicator (0/1),0,1
+Is_Home_Loan,Binary,2,Binary Indicator (0/1),0,1
+Marital_Status,Nominal,4,OneHotEncoder(drop=first),Divorced,3
+Home_Ownership,Nominal,3,OneHotEncoder(drop=first),Mortgage,2
+Employment_Type,Nominal,5,OneHotEncoder(drop=first),Contract,4
+Employer_Sector,Nominal,9,OneHotEncoder(drop=first),Agriculture,8
+Loan_Purpose,Nominal,6,OneHotEncoder(drop=first),Auto,5
+Region,Nominal,3,OneHotEncoder(drop=first),Rural,2
+Application_Channel,Nominal,3,OneHotEncoder(drop=first),Agent,2
