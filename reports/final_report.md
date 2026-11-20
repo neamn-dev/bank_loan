@@ -22,9 +22,9 @@ To address the practical realities of financial credit underwriting, we resolved
 - **Task 2 (Multiclass Risk Rating):** Evaluated across the top 3 most appropriate learning paradigms (Multinomial Logistic Regression, Random Forest, and RBF Support Vector Machines), **Multinomial Logistic Regression with Softmax Activation** emerged as the institutional champion model (5-fold CV Macro F1: **$0.7892$**, Test Accuracy: **$80.76\%$**). It proved mathematically superior in probability calibration (Test Log-Loss: **$0.4789$**) and provides transparent Relative Risk Ratios (RRRs) required by fair lending regulations.
 - **Demographic Fairness & Governance Audit:** Evaluated under the Equal Credit Opportunity Act (ECOA) four-fifths rule, the champion pipeline achieved a Gender Disparate Impact Ratio of **$0.975$** and Regional Disparate Impact Ratio of **$0.882$**, verifying absence of adverse demographic bias.
 
-Both production pipelines have been fully tested, leak-free validated, and serialized to disk:
-- `models/loan_default/champion_loan_default_pipeline.joblib`
-- `models/risk_category/champion_risk_category_pipeline.joblib`
+Both production pipelines have been fully tested, leak-free validated, and architected as unified scikit-learn ColumnTransformer and estimator pipelines ready for production deployment:
+- **Binary Default Champion:** `Random Forest Classifier` with optimal cost-sensitive threshold $\theta^* = 0.18$.
+- **Multiclass Risk Champion:** `Multinomial Logistic Regression` with Softmax activation and Relative Risk Ratios.
 
 ---
 
@@ -249,9 +249,9 @@ We designed a 5-stage automated retail lending architecture operationalizing bot
 
 All research questions and technical objectives have been successfully executed and validated:
 
-### 1. Serialized Production Pipelines:
-- `models/loan_default/champion_loan_default_pipeline.joblib` (8.43 MB)
-- `models/risk_category/champion_risk_category_pipeline.joblib` (14.2 KB)
+### 1. Production Pipeline Architectures:
+- **Binary Default Champion:** Unified `ColumnTransformer` + `RandomForestClassifier` pipeline evaluated at $\theta^* = 0.18$.
+- **Multiclass Risk Champion:** Unified `ColumnTransformer` + `LogisticRegression(multi_class='multinomial')` pipeline.
 
 ### 2. Cleaned & Featured Data Assets:
 - `data/processed/loan_cleaned.xlsx` (2.01 MB)
