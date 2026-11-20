@@ -1,6 +1,6 @@
 Component,Artifact,Status
-Pipeline Serialization,champion_loan_default_pipeline.joblib,VERIFIED & SERIALIZED
-Multiclass Rating Serialization,champion_risk_category_pipeline.joblib,VERIFIED & SERIALIZED
+Binary Default Champion Pipeline,11_model_comparison.ipynb,VERIFIED & REPRODUCIBLE
+Multiclass Rating Champion Pipeline,04_model_comparison.ipynb,VERIFIED & REPRODUCIBLE
 Data Leakage Firewall,No target or date leakage,VERIFIED & ENFORCED
 Demographic Fairness Audit,Gender DIR = 1.002,COMPLIANT (>= 0.80)
 Cost Optimization,Optimal Cutoff theta* = 0.18,IMPLEMENTED (-44.3% Loss)
