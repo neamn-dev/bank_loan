@@ -1,0 +1,4 @@
+Model,Train_R2,Test_R2,Test_Adj_R2,CV_R2_Mean,CV_R2_Std,Train_MAE,Test_MAE,Train_RMSE,Test_RMSE,Generalization_Gap,Fit_Status
+OLS (Linear Regression),0.7162,0.7129,0.7046,0.7121,0.0088,0.6613,0.6644,0.836,0.8417,0.0033,Good Fit
+Ridge Regression (L2),0.7162,0.7129,0.7047,0.7121,0.0087,0.6614,0.6644,0.836,0.8416,0.0032,Good Fit
+Lasso Regression (L1),0.6851,0.684,0.6749,0.6847,0.009,0.6966,0.7054,0.8806,0.883,0.0011,Good Fit

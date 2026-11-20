@@ -1,4 +1,13 @@
-Feature,Raw_Skewness,Post_Log1p_Skewness,Skewness_Reduction,Normality_Assessment
-Annual_Income,4.5892069576562555,-0.38966472996498136,4.199542227691274,Strongly Right-Skewed
-Loan_Amount,2.591248263918922,0.09593866868983589,2.4953095952290862,Strongly Right-Skewed
-Savings_Balance,6.567277050488421,-2.0521908333084777,4.5150862171799435,Strongly Right-Skewed
+Feature,Skewness_Coefficient,Classification,Mean,Median,Standard_Deviation,Recommended_Action
+Checking_Balance,10.8861,Right-Skewed,2885.14,1660.0,4603.11,Log(1+x) transformation justified
+Savings_Balance,6.5673,Right-Skewed,23996.75,12020.0,40528.56,Log(1+x) transformation justified
+Annual_Income,4.5892,Right-Skewed,42965.79,37400.0,27085.5,Log(1+x) transformation justified
+Monthly_Debt_Payment,2.6211,Right-Skewed,446.52,305.0,484.02,Log(1+x) transformation justified
+Loan_Amount,2.5912,Right-Skewed,25451.05,16000.0,26510.41,Log(1+x) transformation justified
+Credit_History_Years,0.9478,Right-Skewed,9.21,8.4,5.01,Log(1+x) transformation justified
+Existing_Loans,0.8488,Right-Skewed,1.42,1.0,1.22,Log(1+x) transformation justified
+Age,0.6004,Right-Skewed,43.41,42.0,10.6,Log(1+x) transformation justified
+Loan_Term_Months,0.3725,Approximately Symmetric,44.73,48.0,19.56,Standard scaling sufficient (no transform needed)
+Credit_Utilization_Pct,0.0963,Approximately Symmetric,39.46,39.2,18.13,Standard scaling sufficient (no transform needed)
+Interest_Rate_Pct,0.0506,Approximately Symmetric,8.51,8.5,1.57,Standard scaling sufficient (no transform needed)
+Credit_Score,-0.0909,Approximately Symmetric,684.3,685.0,70.3,Standard scaling sufficient (no transform needed)

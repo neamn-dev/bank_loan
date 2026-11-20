@@ -1,3 +1,5 @@
-Split_Strategy,Train_Rows,Test_Rows,Train_Defaults,Test_Defaults,Train_Default_Rate,Test_Default_Rate,Absolute_Rate_Gap
-Stratified 80/20,8000,2000,1582,396,19.78%,19.80%,0.0250%
-Stratified 70/30,7000,3000,1385,593,19.79%,19.77%,0.0190%
+Split,Model,Train_Size,Test_Size,Train_Accuracy,Test_Accuracy,Train_Recall,Test_Recall,Train_F1,Test_F1,Train_ROC_AUC,CV_AUC_Mean,CV_AUC_Std,Test_ROC_AUC,Generalization_Gap,Fit_Status
+80/20 Split,Logistic_Regression,8000,2000,0.869,0.865,0.5316,0.5202,0.6161,0.6041,0.8945,0.8889,0.0057,0.8905,0.004,Good Fit
+80/20 Split,Random_Forest,8000,2000,0.9389,0.8465,0.713,0.4091,0.8219,0.5135,0.9858,0.8787,0.0059,0.8662,0.1195,Overfitting (Moderate)
+70/30 Split,Logistic_Regression,7000,3000,0.8689,0.863,0.5292,0.5312,0.6149,0.6052,0.8965,0.8894,0.0043,0.8864,0.0101,Good Fit
+70/30 Split,Random_Forest,7000,3000,0.9409,0.8527,0.722,0.4216,0.8285,0.5308,0.9866,0.8813,0.0054,0.8667,0.1199,Overfitting (Moderate)

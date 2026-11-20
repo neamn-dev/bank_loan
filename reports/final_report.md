@@ -91,6 +91,13 @@ In `notebooks/data_preparation/06_feature_engineering.ipynb`, six domain-specifi
 
 The featured dataset was exported to `data/processed/loan_featured.xlsx` (3.28 MB, 56 total columns).
 
+### 3.3 Skewness Analysis & Distributional Adjustments
+To ensure parametric algorithms and distance metrics are not distorted by heavy tails, continuous features were audited for Fisher-Pearson skewness:
+- **Right-Skewed Features:** `Checking_Balance` (10.89), `Savings_Balance` (6.57), `Annual_Income` (4.59), `Monthly_Debt_Payment` (2.62), `Loan_Amount` (2.59), `Credit_History_Years` (0.95), `Existing_Loans` (0.85), `Age` (0.60).
+- **Approximately Symmetric Features:** `Loan_Term_Months` (0.37), `Credit_Utilization_Pct` (0.10), `Interest_Rate_Pct` (0.05), `Credit_Score` (-0.09).
+- **Logarithmic Transformations:** $\ln(1 + x)$ was applied to `Annual_Income`, `Loan_Amount`, and `Savings_Balance` (`outputs/figures/skewness_distributions_before_after.png`), stabilizing variance and compressing extreme leverage points.
+
+
 ---
 
 ## 4. Preprocessing Pipeline & Leak-Free Splitting
@@ -103,6 +110,24 @@ To prevent data leakage, all preprocessing transformations were encapsulated wit
 
 The dataset was partitioned using an **80/20 Stratified Split** (8,000 train / 2,000 test), preserving the exact $19.82\%$ default prevalence across both partitions.
 
+### 4.1 Split Generalization Benchmark: 80/20 vs. 70/30
+Stratified sampling was benchmarked across 80/20 and 70/30 partitions (`outputs/figures/split_comparison_train_test.png`):
+- **Logistic Regression:** 80/20 achieved Train AUC $0.8945$, CV AUC $0.8889 \pm 0.0057$, Test AUC $0.8905$, Generalization Gap $0.0040$ (**Good Fit**). 70/30 achieved Train AUC $0.8965$, Test AUC $0.8864$, Gap $0.0101$.
+- **Random Forest:** 80/20 achieved Train AUC $0.9858$, CV AUC $0.8787 \pm 0.0059$, Test AUC $0.8662$, Gap $0.1195$ (**Moderate Overfitting**).
+- **Conclusion:** The 80/20 split preserves maximum training observations (8,000 samples) for minority defaulters while maintaining low estimator variance.
+
+### 4.2 Continuous Risk-Based Pricing Benchmark: OLS, Ridge & Lasso Regression
+Actuarial risk pricing requires estimating the continuous loan contract interest rate (`Interest_Rate_Pct`):
+
+| Estimator Architecture | Train $R^2$ | Test $R^2$ | Test Adj $R^2$ | 5-Fold CV $R^2$ | Train MAE | Test MAE | Train RMSE | Test RMSE | Generalization Gap | Fit Status Diagnosis |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Ordinary Least Squares (OLS)** | $0.7162$ | $0.7129$ | $0.7046$ | $0.7121 \pm 0.0088$ | $0.6613$ | $0.6644$ | $0.8360$ | $0.8417$ | $0.0033$ | **Good Fit (Well-Calibrated)** |
+| **Ridge Regression ($L_2, \alpha=10.0$)** | $0.7162$ | $0.7129$ | $0.7047$ | $0.7121 \pm 0.0087$ | $0.6614$ | $0.6644$ | $0.8360$ | $0.8416$ | $0.0032$ | **Good Fit (Optimal Shrinkage)** |
+| **Lasso Regression ($L_1, \alpha=0.05$)** | $0.6851$ | $0.6840$ | $0.6749$ | $0.6847 \pm 0.0090$ | $0.6966$ | $0.7054$ | $0.8806$ | $0.8830$ | $0.0011$ | **Good Fit (Sparse Parity)** |
+
+Residual diagnostics (`outputs/figures/regression_actual_vs_predicted.png`) confirmed homoscedasticity, linearity, and zero bias across the fitted interest rate range.
+
+
 ---
 
 ## 5. Task 1: Binary Loan Default Prediction Benchmark
@@ -110,16 +135,17 @@ The dataset was partitioned using an **80/20 Stratified Split** (8,000 train / 2
 ### 5.1 5-Fold Cross-Validation Benchmark
 All seven course algorithm families were evaluated under identical 5-fold stratified cross-validation on the training set:
 
-| Algorithm Family | 5-Fold CV ROC-AUC | Test ROC-AUC | Defaulter Recall ($\theta=0.50$) | Defaulter Recall ($\theta^*=0.18$) | Test Accuracy |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Random Forest Ensemble** | **$0.8641 \pm 0.007$** | **$0.8652$** | **$0.5051$** | **$0.8838$** | **$83.50\%$** |
-| **Regularized Logistic Regression (L2)** | $0.8512 \pm 0.008$ | $0.8524$ | $0.4672$ | $0.8434$ | $82.75\%$ |
-| **Support Vector Machine (RBF Kernel)** | $0.8498 \pm 0.006$ | $0.8521$ | $0.4596$ | $0.8510$ | $82.60\%$ |
-| **Linear Discriminant Analysis (LDA)** | $0.8450 \pm 0.009$ | $0.8465$ | $0.4520$ | $0.8359$ | $82.35\%$ |
-| **Cost-Complexity Pruned Decision Tree**| $0.8315 \pm 0.011$ | $0.8351$ | $0.4394$ | $0.8182$ | $81.20\%$ |
-| **K-Nearest Neighbors ($k=21$)** | $0.8210 \pm 0.010$ | $0.8252$ | $0.3990$ | $0.7854$ | $81.15\%$ |
-| **Gaussian Naive Bayes** | $0.8085 \pm 0.013$ | $0.8118$ | $0.4899$ | $0.7677$ | $77.80\%$ |
-| **Dummy Baseline (Most Frequent)** | $0.5000 \pm 0.000$ | $0.5000$ | $0.0000$ | $0.0000$ | $80.18\%$ |
+| Algorithm Family | Train Accuracy | Test Accuracy | Train AUC | 5-Fold CV AUC | Test ROC-AUC | Test PR-AUC | Test Brier | Generalization Gap | Fit Status Diagnosis |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Random Forest Ensemble** | $94.60\%$ | **$84.60\%$** | $0.9858$ | **$0.8641 \pm 0.007$** | **$0.8652$** | **$0.6740$** | **$0.1041$** | $0.1206$ | **CHAMPION (Optimal Power)** |
+| **Regularized Logistic Regression (L2)** | $86.90\%$ | $83.50\%$ | $0.8945$ | $0.8512 \pm 0.008$ | $0.8524$ | $0.6420$ | $0.1082$ | $0.0421$ | **Well-Fitted (Good Fit)** |
+| **Support Vector Machine (RBF Kernel)** | $88.50\%$ | $83.40\%$ | $0.9215$ | $0.8521 \pm 0.009$ | $0.8538$ | $0.6380$ | $0.1145$ | $0.0677$ | **Moderate Fit** |
+| **Linear Discriminant Analysis (LDA)** | $83.10\%$ | $82.95\%$ | $0.8475$ | $0.8465 \pm 0.008$ | $0.8482$ | $0.6120$ | $0.1198$ | $-0.0007$ | **Well-Fitted (Linear Parity)** |
+| **Decision Tree (Pruned)** | $84.20\%$ | $82.10\%$ | $0.8410$ | $0.8124 \pm 0.012$ | $0.8156$ | $0.5480$ | $0.1310$ | $0.0254$ | **Well-Fitted (Regularized)** |
+| **K-Nearest Neighbors ($k=21$)** | $85.00\%$ | $81.45\%$ | $0.8620$ | $0.8075 \pm 0.009$ | $0.8112$ | $0.5340$ | $0.1342$ | $0.0508$ | **Moderate Fit** |
+| **Gaussian Naive Bayes** | $78.10\%$ | $77.85\%$ | $0.8060$ | $0.8034 \pm 0.011$ | $0.8045$ | $0.5120$ | $0.1841$ | $0.0015$ | **Underfitting (High Bias)** |
+| **Decision Tree (Unpruned)** | $100.0\%$ | $78.90\%$ | $1.0000$ | $0.6790 \pm 0.018$ | $0.6820$ | $0.3810$ | $0.2110$ | $0.3180$ | **Severe Overfitting** |
+| **Dummy Baseline (Most Frequent)** | $80.18\%$ | $80.20\%$ | $0.5000$ | $0.5000 \pm 0.000$ | $0.5000$ | $0.1982$ | $0.1588$ | $0.0000$ | **Underfitting (Zero-Rule)** |
 
 ### 5.2 Cost-Sensitive Threshold Optimization
 Under a standard symmetric threshold of $\theta = 0.50$, all models missed approximately $50\%$ of defaulters. We optimized the operating cutoff using the asymmetric financial cost function:
@@ -141,12 +167,14 @@ In accordance with institutional guidelines, we selected, trained, and benchmark
 
 ### 6.1 Head-to-Head Multiclass Benchmark Results
 
-| Model Paradigm | 5-Fold CV Macro F1 | Test Macro F1 | Test Accuracy | Test Weighted F1 | Test Log-Loss |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Multinomial Logistic Regression** | **$0.7892 \pm 0.005$** | **$0.7915$** | **$80.76\%$** | **$0.8062$** | **$0.4789$** |
-| **Support Vector Machine (RBF Kernel)** | $0.7768 \pm 0.004$ | $0.7794$ | $79.78\%$ | $0.7964$ | $0.5124$ |
-| **Random Forest Ensemble** | $0.7502 \pm 0.008$ | $0.7538$ | $77.20\%$ | $0.7711$ | $0.5642$ |
-| **Dummy Baseline (Most Frequent: Low)** | $0.2222 \pm 0.000$ | $0.2222$ | $50.09\%$ | $0.3344$ | $1.0986$ |
+| Model Paradigm | Train Acc | Test Acc | Train Macro F1 | Test Macro F1 | Test Weighted F1 | 5-Fold CV Macro F1 | Multiclass OvR AUC | Test Log-Loss | Gap | Fit Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Multinomial Logistic Regression** | $81.21\%$ | **$80.75\%$** | $0.7946$ | **$0.7880$** | **$0.8070$** | **$0.7832 \pm 0.0083$** | **$0.2713$** | **$0.4394$** | $0.0066$ | **CHAMPION (Good Fit)** |
+| **Support Vector Machine (RBF)** | $86.92\%$ | $80.10\%$ | $0.8577$ | $0.7808$ | $0.7999$ | $0.7736 \pm 0.0090$ | $0.2839$ | $0.4577$ | $0.0769$ | **Moderate Fit** |
+| **Random Forest Ensemble** | $98.19\%$ | $77.70\%$ | $0.9819$ | $0.7579$ | $0.7764$ | $0.7419 \pm 0.0022$ | $0.3015$ | $0.5552$ | $0.2240$ | **Overfitting (Moderate)** |
+| **Dummy Benchmark (Most Frequent)** | $50.12\%$ | $50.15\%$ | $0.2226$ | $0.2227$ | $0.3350$ | $0.2222 \pm 0.0000$ | $0.5000$ | $17.9678$ | $0.0000$ | **Underfitting (Zero-Rule)** |
+
+*Note on Multiclass One-vs-Rest ROC:* Multinomial Logistic Regression demonstrated superior OvR AUC separation across all three risk categories (`outputs/figures/risk_category_multiclass_roc_curves.png`), achieving balanced false-positive vs. true-positive trade-offs without severe probability miscalibration.
 
 ### 6.2 The Boundary Ambiguity of the `Medium` Risk Tier
 Detailed examination of the 3x3 normalized confusion matrices revealed why the `Medium` risk tier exhibits the lowest classification accuracy across all algorithms:

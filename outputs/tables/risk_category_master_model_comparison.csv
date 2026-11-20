@@ -1,4 +1,5 @@
-Algorithm,Model_Paradigm,Scaling_Required,Interpretability,Test_Accuracy,Macro_F1,Test_Log_Loss,Production_Recommendation
-Multinomial Logistic Regression,Parametric / Probabilistic (Softmax),Yes (StandardScaler),High (Exact Relative Risk Ratios & Log-Odds),0.8075,0.788014555413212,0.43942451195233345,"CHAMPION: Highest overall Macro F1, best calibrated probabilities, fully compliant with banking regulations."
-Support Vector Machine (RBF),Non-Parametric / Kernel Geometric Margin,Yes (StandardScaler),Low-to-Moderate (Black-box kernel boundary),0.801,0.7808443178055059,0.45770701515543294,"STRONG RUNNER-UP: Excellent non-linear separation, very low CV variance; slower inference."
-Random Forest Ensemble,Non-Parametric / Bagged Decision Trees,No (Scale-invariant),Moderate (MDI & Permutation Feature Importance),0.777,0.757865224342091,0.5551528419817435,SOLID ALTERNATIVE: Captures non-linear thresholds and feature interactions; slightly lower on continuous boundaries.
+Model,Train_Accuracy,Test_Accuracy,Train_Macro_F1,Test_Macro_F1,Test_Weighted_F1,CV_Macro_F1_Mean,CV_Macro_F1_Std,Train_Multiclass_AUC_OvR,Test_Multiclass_AUC_OvR,Test_Log_Loss,Generalization_Gap,Fit_Status
+Multinomial Logistic Regression,0.8121,0.8075,0.7946,0.788,0.807,0.7832,0.0083,0.2692,0.2713,0.4394,0.0066,Good Fit
+Support Vector Machine (RBF),0.8692,0.801,0.8577,0.7808,0.7999,0.7736,0.009,0.2558,0.2839,0.4577,0.0769,Moderate Fit
+Random Forest Ensemble,0.9819,0.777,0.9819,0.7579,0.7764,0.7419,0.0022,0.2403,0.3015,0.5552,0.224,Overfitting (Moderate)
+Dummy Classifier (Most Frequent),0.5012,0.5015,0.2226,0.2227,0.335,0.2222,0.0,0.5,0.5,17.9678,0.0,Underfitting (Zero-Rule Benchmark)
