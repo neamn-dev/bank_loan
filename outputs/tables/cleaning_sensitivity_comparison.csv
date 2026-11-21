@@ -1,5 +1,7 @@
-Cleaning_Strategy,Sample_Size,Mean_Income,Std_Income,Median_Income,Skewness,Correlation_with_Loan_Amount
-Baseline (Median Imputation),10000,42708.09,26476.82295456305,37400.0,4.714276798391523,0.2588307227621028
-Alternative A (Mean Imputation),10000,42965.78588654713,26450.976239221847,38700.0,4.699250417360428,0.2594659860383513
-Alternative B (99th Capping + Median),10000,42329.0988,23483.603198575747,37400.0,1.2542119922252204,0.2866502328945746
-Alternative C (Outlier Deletion),9185,39799.673380511704,19658.719060125604,36500.0,0.6528693947719775,0.2680985829692751
+Cleaning_Strategy,Sample_Size,Attrition_Pct,Default_Rate_Pct,Income_Mean,Income_Std,Income_Median,Income_Skewness,Corr_Income_Loan
+Median Imputation + 99th Capping (Baseline),10000,0.0,19.78,42329.1,23483.6,37400.0,1.2542,0.2867
+Mean Imputation + 99th Capping,10000,0.0,19.78,42568.4,23458.47,38700.0,1.2281,0.2874
+Median Imputation + Outlier Deletion,9185,8.15,20.12,39799.67,19658.72,36500.0,0.6529,0.2681
+Mean Imputation + Outlier Deletion,9185,8.15,20.12,39799.67,19658.72,36500.0,0.6529,0.2681
+Median Imputation + Uncapped (Raw Outliers),10000,0.0,19.78,42708.09,26476.82,37400.0,4.7143,0.2588
+Mean Imputation + Uncapped (Raw Outliers),10000,0.0,19.78,42965.79,26450.98,38700.0,4.6993,0.2595

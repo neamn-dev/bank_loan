@@ -1,0 +1,7 @@
+Cleaning_Strategy,Sample_Size,Attrition_Pct,Default_Rate_Pct,Income_Mean,Income_Std,Income_Median,Income_Skewness,Corr_Income_Loan
+Median Imputation + 99th Capping (Baseline),10000,0.0,19.78,42329.1,23483.6,37400.0,1.2542,0.2867
+Mean Imputation + 99th Capping,10000,0.0,19.78,42568.4,23458.47,38700.0,1.2281,0.2874
+Median Imputation + Outlier Deletion,9185,8.15,20.12,39799.67,19658.72,36500.0,0.6529,0.2681
+Mean Imputation + Outlier Deletion,9185,8.15,20.12,39799.67,19658.72,36500.0,0.6529,0.2681
+Median Imputation + Uncapped (Raw Outliers),10000,0.0,19.78,42708.09,26476.82,37400.0,4.7143,0.2588
+Mean Imputation + Uncapped (Raw Outliers),10000,0.0,19.78,42965.79,26450.98,38700.0,4.6993,0.2595

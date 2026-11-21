@@ -1,0 +1,7 @@
+Cleaning_Strategy,Train_AUC,Test_AUC,Test_PR_AUC,Test_Accuracy,Defaulter_Recall,Test_F1,Brier_Score,CV_AUC_Mean,CV_AUC_Std,Generalization_Gap,Fit_Status
+Median Imputation + 99th Capping (Baseline),0.886,0.8806,0.691,0.859,0.4949,0.5816,0.1,0.8813,0.0068,0.0054,Good Fit
+Mean Imputation + 99th Capping,0.8862,0.881,0.6916,0.858,0.4924,0.5786,0.0999,0.8814,0.0067,0.0052,Good Fit
+Median Imputation + Outlier Deletion,0.882,0.8917,0.7285,0.8672,0.5027,0.6039,0.0951,0.8764,0.0082,-0.0097,Good Fit
+Mean Imputation + Outlier Deletion,0.8822,0.8919,0.7288,0.8677,0.5,0.6036,0.095,0.8766,0.0083,-0.0097,Good Fit
+Median Imputation + Uncapped (Raw Outliers),0.8859,0.8807,0.6908,0.8595,0.4924,0.5812,0.1,0.8811,0.0067,0.0052,Good Fit
+Mean Imputation + Uncapped (Raw Outliers),0.886,0.8811,0.6914,0.858,0.4899,0.5774,0.0998,0.8813,0.0066,0.005,Good Fit
