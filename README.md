@@ -13,13 +13,19 @@ This repository provides an evidence-based Machine Learning investigation for re
 1. **Task 1 — Loan Default Prediction (Binary Classification):**
    - **Target:** `Loan_Default` (`Yes` vs. `No`)
    - **Baseline Default Rate:** 19.82% defaulters across 10,000 unique applicants.
-   - **Champion Model:** **Random Forest Classifier** (Test ROC-AUC: **0.8652**).
-   - **Cost-Sensitive Cutoff:** $\theta^* = 0.18$ achieves **88.38% Defaulter Recall**, cutting portfolio credit write-offs by **44.34%**.
+   - **Champion Model:** **Regularized Logistic Regression (L2)** (Test ROC-AUC: **0.8892**, PR-AUC: **0.7078**, Accuracy: **86.40%**, Generalization Gap: **0.0049**).
+   - **Cost-Sensitive Cutoff:** Operating at $\theta^* = 0.18$ increases **Defaulter Recall to 88.38%**, cutting net portfolio write-offs by **44.34%** ($567,500 saved).
+   - *Baseline Comparison:* On raw unengineered features, Random Forest scored 0.8652; under the full production feature pipeline, Random Forest overfits (Train AUC 0.9605 vs. Test AUC 0.8659, Gap 0.0945) with inferior probability calibration (Brier Score 0.1070 vs. 0.0969).
 
 2. **Task 2 — Loan Risk Category Prediction (Multiclass Classification):**
-   - **Target:** `Risk_Category` (`Low`: 50.09%, `Medium`: 29.94%, `High`: 19.97%)
-   - **Leakage Firewall:** Strict exclusion of `Loan_Default` to simulate actual loan origination.
-   - **Champion Model:** **Multinomial Logistic Regression** (Test Macro F1: **0.7892**, Accuracy: **80.76%**, Log-Loss: **0.4789**).
+   - **Target:** `Risk_Category` (`Low`: 50.10%, `Medium`: 29.90%, `High`: 20.00%)
+   - **Leakage Firewall:** Strict exclusion of `Loan_Default` to simulate genuine pre-disbursement underwriting.
+   - **Champion Model:** **Multinomial Logistic Regression with Softmax** (Test Accuracy: **80.75%**, Test Macro F1: **0.7880**, 5-Fold CV Macro F1: **0.7832 ± 0.0083**, Log-Loss: **0.4394**).
+
+3. **Task 3 — Continuous Risk-Based Interest Rate Pricing (Regression Benchmark):**
+   - **Target:** `Interest_Rate_Pct` (Mean: 8.51%, Std: 1.57%, Range: 4.00% to 15.10%).
+   - **Champion Model:** **Ridge Regression ($L_2, \alpha=10.0$)** (Test $R^2$: **0.7129**, Test Adj $R^2$: **0.7047**, Test RMSE: **0.8416%**, 5-Fold CV $R^2$: **0.7121 ± 0.0087**, Generalization Gap: **0.0032**).
+   - **Feature Selection:** Lasso ($L_1$) identified an ultra-sparse 6-feature pricing scorecard capturing 96% of full-model predictive power.
 
 ---
 
@@ -68,12 +74,6 @@ bank_loan/
 │   ├── figures/                                      # 35 high-resolution diagnostic charts (.png)
 │   └── tables/                                       # 42 CSV benchmark tables and audit matrices
 │
-├── reports/
-│   ├── final_report.md                               # Complete academic research paper
-│   ├── research_questions_mapping.md                 # Complete RQ1–RQ22 & Q1–Q92 evidence mapping
-│   └── presentation/
-│       └── presentation_slides.md                    # 11-slide university oral defense deck
-│
 ├── requirements.txt                                  # Dependency specifications
 └── README.md
 ```
@@ -84,25 +84,56 @@ bank_loan/
 
 ### Task 1: Binary Loan Default Prediction
 
-| Algorithm Family | 5-Fold CV ROC-AUC | Test ROC-AUC | Defaulter Recall ($\theta=0.50$) | Defaulter Recall ($\theta^*=0.18$) | Test Accuracy |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Random Forest (CHAMPION)** | **0.8641** | **0.8652** | **50.51%** | **88.38%** | **83.50%** |
-| Regularized Logistic Regression | 0.8512 | 0.8524 | 46.72% | 84.34% | 82.75% |
-| Support Vector Machine (RBF) | 0.8498 | 0.8521 | 45.96% | 85.10% | 82.60% |
-| Linear Discriminant Analysis | 0.8450 | 0.8465 | 45.20% | 83.59% | 82.35% |
-| Decision Tree (Pruned) | 0.8315 | 0.8351 | 43.94% | 81.82% | 81.20% |
-| K-Nearest Neighbors ($k=25$) | 0.8210 | 0.8252 | 39.90% | 78.54% | 81.15% |
-| Gaussian Naive Bayes | 0.8085 | 0.8118 | 48.99% | 76.77% | 77.80% |
-| Dummy Baseline | 0.5000 | 0.5000 | 0.00% | 0.00% | 80.18% |
+#### A. Final Champion Model (Engineered Pipeline — Notebook 11, Section 11)
+| Metric | Regularized Logistic Regression (CHAMPION) | Random Forest Ensemble |
+| :--- | :---: | :---: |
+| **Test ROC-AUC** | **0.8892** | 0.8659 |
+| **Test PR-AUC** | **0.7078** | 0.6508 |
+| **5-Fold CV ROC-AUC** | **0.8890 ± 0.0056** | 0.8641 ± 0.0070 |
+| **Test Accuracy** | **86.40%** | 84.60% |
+| **Defaulter Recall ($\theta=0.50$)** | **51.01%** | 50.51% |
+| **Defaulter Recall ($\theta^*=0.18$)** | **88.38%** | 88.38% |
+| **Test Brier Score (Calibration)** | **0.0969 (Superior)** | 0.1070 |
+| **Generalization Gap** | **0.0049 (Well-Fitted)** | 0.0945 (Moderate Overfitting) |
+| **Institutional Verdict** | **Production Champion** | Overfitted on complex features |
 
-### Task 2: Multiclass Loan Risk Rating
+#### B. Master 7-Algorithm Family Baseline (Pre-Engineered Features)
+| Algorithm Family | 5-Fold CV ROC-AUC | Test ROC-AUC | Defaulter Recall ($\theta=0.50$) | Defaulter Recall ($\theta^*=0.18$) | Test Accuracy | Generalization Fit |
+| :--- | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Random Forest Ensemble** | 0.8641 | 0.8652 | 50.51% | 88.38% | 83.50% | High train variance |
+| **Regularized Logistic Regression** | 0.8512 | 0.8524 | 46.72% | 84.34% | 82.75% | Well-Fitted baseline |
+| **Support Vector Machine (RBF)** | 0.8498 | 0.8521 | 45.96% | 85.10% | 82.60% | Well-Fitted non-linear |
+| **Linear Discriminant Analysis** | 0.8450 | 0.8465 | 45.20% | 83.59% | 82.35% | High stability |
+| **Decision Tree (Pruned)** | 0.8315 | 0.8351 | 43.94% | 81.82% | 81.20% | Interpretable rules |
+| **K-Nearest Neighbors ($k=21$)** | 0.8210 | 0.8252 | 39.90% | 78.54% | 81.15% | Sensitive to scaling |
+| **Gaussian Naive Bayes** | 0.8085 | 0.8118 | 48.99% | 76.77% | 77.80% | Poor probability calibration |
+| **Dummy Baseline (Most Frequent)** | 0.5000 | 0.5000 | 0.00% | 0.00% | 80.18% | Zero-rule benchmark |
 
-| Model Paradigm | 5-Fold CV Macro F1 | Test Macro F1 | Test Accuracy | Test Log-Loss |
-| :--- | :---: | :---: | :---: | :---: |
-| **Multinomial Logistic Regression (CHAMPION)** | **0.7892** | **0.7915** | **80.76%** | **0.4789** |
-| Support Vector Machine (RBF Kernel) | 0.7768 | 0.7794 | 79.78% | 0.5124 |
-| Random Forest Classifier | 0.7502 | 0.7538 | 77.20% | 0.5642 |
-| Dummy Baseline | 0.2222 | 0.2222 | 50.09% | 1.0986 |
+### Task 2: Multiclass Loan Risk Rating (`Risk_Category`)
+
+| Model Paradigm | Train Accuracy | Test Accuracy | Train Macro F1 | Test Macro F1 | 5-Fold CV Macro F1 | Test Log-Loss | Fit Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Multinomial Logistic Regression (CHAMPION)** | **81.21%** | **80.75%** | **0.7946** | **0.7880** | **0.7832 ± 0.0083** | **0.4394** | **Good Fit (Champion)** |
+| **Support Vector Machine (RBF Kernel)** | 86.92% | 80.10% | 0.8577 | 0.7808 | 0.7736 ± 0.0090 | 0.4577 | Moderate Fit |
+| **Random Forest Classifier** | 98.19% | 77.70% | 0.9819 | 0.7579 | 0.7419 ± 0.0022 | 0.5552 | Overfitting (Moderate) |
+| **Dummy Baseline (Zero-Rule)** | 50.12% | 50.15% | 0.2226 | 0.2227 | 0.2222 ± 0.0000 | 17.9678 | Severe Underfitting |
+
+### Task 3: Continuous Lending Regression Benchmark (`Interest_Rate_Pct`)
+
+| Estimator Architecture | Train $R^2$ | Test $R^2$ | Test Adj $R^2$ | 5-Fold CV $R^2$ | Test RMSE | Test MAE | Generalization Gap | Fit Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Ridge Regression ($L_2, \alpha=10.0$)** | **0.7162** | **0.7129** | **0.7047** | **0.7121 ± 0.0087** | **0.8416%** | **0.6644%** | **0.0032** | **Good Fit (Champion)** |
+| **Ordinary Least Squares (OLS)** | 0.7162 | 0.7129 | 0.7046 | 0.7121 ± 0.0088 | 0.8417% | 0.6644% | 0.0033 | Good Fit |
+| **Lasso Regression ($L_1, \alpha=0.05$)** | 0.6851 | 0.6840 | 0.6749 | 0.6847 ± 0.0090 | 0.8830% | 0.7054% | 0.0011 | Good Fit (6 Active Features) |
+
+### Task 4: Data Cleaning Sensitivity Analysis (RQ6)
+
+| Cleaning Strategy | Sample Size ($N$) | Portfolio Attrition | Portfolio Default Rate | Income Skewness | Test ROC-AUC | Test PR-AUC | Methodological Verdict |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Median Imputation + 99th Capping (Baseline)** | **10,000** | **0.00%** | **19.78%** | **1.2542** | **0.8806** | **0.6910** | **Champion Pipeline (Zero Attrition)** |
+| **Mean Imputation + 99th Capping** | 10,000 | 0.00% | 19.78% | 1.2281 | 0.8810 | 0.6916 | Viable; inflates imputed mean by +$5.5k |
+| **Median Imputation + Outlier Deletion** | 9,185 | 8.15% | 20.12% | 0.6529 | 0.8917* | 0.7285* | **Rejected:** Severe customer attrition & selection bias |
+| **Mean Imputation + Outlier Deletion** | 9,185 | 8.15% | 20.12% | 0.6529 | 0.8919* | 0.7288* | **Rejected:** Severe customer attrition & selection bias |
 
 ---
 
